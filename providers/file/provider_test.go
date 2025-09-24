@@ -58,7 +58,7 @@ var _ = Describe("Provider File", Ordered, func() {
 
 		By("Starting the provider", func() {
 			g.Go(func() error {
-				return ignoreCanceled(provider.Run(ctx, nil))
+				return ignoreCanceled(provider.Start(ctx, nil))
 			})
 		})
 

@@ -21,8 +21,6 @@ import (
 	"errors"
 	"os"
 
-	"golang.org/x/sync/errgroup"
-
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 
@@ -89,15 +87,8 @@ func main() {
 	}
 
 	// Starting everything.
-	g, ctx := errgroup.WithContext(ctx)
-	g.Go(func() error {
-		return ignoreCanceled(provider.Run(ctx, mgr))
-	})
-	g.Go(func() error {
-		return ignoreCanceled(mgr.Start(ctx))
-	})
-	if err := g.Wait(); err != nil {
-		entryLog.Error(err, "unable to start")
+	if err := ignoreCanceled(mgr.Start(ctx)); err != nil {
+		entryLog.Error(err, "failed to start manager")
 		os.Exit(1)
 	}
 }
