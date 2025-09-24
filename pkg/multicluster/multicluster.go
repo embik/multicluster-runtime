@@ -61,3 +61,13 @@ type Provider interface {
 	// clusters, current and future.
 	IndexField(ctx context.Context, obj client.Object, field string, extractValue client.IndexerFunc) error
 }
+
+// ProviderRunnable implements a `Start` method similar to manager.Runnable.
+// The main difference to a normal Runnable is that a provider needs an Aware passed to engage clusters it discovers.
+// Start is expected to block until completion.
+//
+// Providers can optionally implement this interface to ensure that the mcmanager.Manager
+// instance automatically starts and manages a provider implementation passed to it.
+type ProviderRunnable interface {
+	Start(context.Context, Aware) error
+}
